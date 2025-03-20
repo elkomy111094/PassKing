@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pass_king/Features/OnBoarding/pages/onboarding_screen.dart';
+import 'package:pass_king/Features/Profile/edit_profile_page.dart';
+import 'package:pass_king/Features/Profile/profile_page.dart';
 import 'package:pass_king/Features/Registeration/pages/complete_registeration_screen.dart';
 import 'package:pass_king/Features/ResetPassword/pages/reset_password_email_screen.dart';
+import 'package:pass_king/Features/change_password/change_password_page.dart';
+import 'package:pass_king/Features/notifications/notification_page.dart';
+import 'package:pass_king/home/home_page.dart';
 
 import '../../Features/Login/pages/login_screen.dart';
 import '../../Features/ResetPassword/pages/reset_password_screen.dart';
 import '../../Features/Splash/pages/splash_screen.dart';
+import '../../Features/add_new_password/add_new_password_page.dart';
+import '../../Features/edit_password/edit_password_page.dart';
+import '../../Features/generate_password/generate_password_page.dart';
+import '../../Features/password_details/password_details_page.dart';
+import '../../Features/password_reveal/password_reveal_page.dart';
 
 class AppRoutes {
   // All app routes
@@ -64,7 +74,7 @@ class AppRoutes {
 
   static const String editBranchScreen = "editBranchScreen";
 
-  static const String addNewBranchScreen = "addNewBranchScreen";
+  static const String homeScreen = "homeScreen";
 
   static const String notificationScreen = "notificationScreen";
   static const String choosePalnScreen = "choosePalnScreen";
@@ -73,6 +83,16 @@ class AppRoutes {
       "settingsContentDetailsScreen";
 
   static const String registrationScreen = "registrationContentDetailsScreen";
+
+  static const String profilePage = "profilePage";
+  static const String updateProfilePage = "updateProfilePage";
+  static const String changePasswordPage = "changePasswordPage";
+
+  static const String passwordDetailsPage = "passwordDetailsPage";
+  static const String passwordRevealedPage = "passwordRevealedPage";
+  static const String addPasswordPage = "addPasswordPage";
+  static const String generatePasswordPage = "generatePasswordPage";
+  static const String editPasswordPage = "editPasswordPage";
 
   static PageTransition<dynamic> appRoutes(RouteSettings settings) {
     dynamic args = settings.arguments;
@@ -95,8 +115,38 @@ class AppRoutes {
           resetPasswordViewModel: args,
         ));
 
+      case profilePage:
+        return appPage(ProfilePage());
+
       case onBoardingPage:
         return appPage(OnBoarding());
+
+      case homeScreen:
+        return appPage(HomeScreen());
+
+      case notificationScreen:
+        return appPage(NotificationPage());
+
+      case updateProfilePage:
+        return appPage(EditProfilePage());
+
+      case changePasswordPage:
+        return appPage(ChangePasswordPage());
+
+      case passwordDetailsPage:
+        return appPage(const PasswordDetailsPage());
+
+      case passwordRevealedPage:
+        return appPage(const PasswordRevealedPage());
+
+      case addPasswordPage:
+        return appPage(const AddNewPasswordPage());
+
+      case generatePasswordPage:
+        return appPage(const GeneratePasswordPage());
+
+      case editPasswordPage:
+        return appPage(const EditPasswordPage());
 
       default:
         return appPage(SplashScreen());

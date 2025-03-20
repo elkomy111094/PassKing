@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../app_size.dart';
 import '../constants/styles.dart';
-
 import '../resources.dart';
 
 class NoDataWidget extends StatelessWidget {
@@ -26,10 +24,12 @@ class NoDataWidget extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: AppStyles.kTextStyle13.copyWith(
-                fontWeight: FontWeight.w600,
-                height: 2,
-              ),
+              style: AppStyles.kTextStyle18
+                  .copyWith(fontWeight: FontWeight.bold)
+                  .copyWith(
+                    fontWeight: FontWeight.w600,
+                    height: 2,
+                  ),
             ),
           ],
         ),

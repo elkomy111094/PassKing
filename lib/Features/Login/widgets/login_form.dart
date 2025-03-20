@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pass_king/shared/extensions/padding_extentions.dart';
+import 'package:pass_king/shared/util/ui.dart';
 import 'package:pass_king/shared/widgets/email_form_field.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../shared/generic_cubit/generic_cubit.dart';
+import '../../../shared/util/app_routes.dart';
 import '../../../shared/widgets/loading_widget.dart';
 import '../../../shared/widgets/password_form_field.dart';
 import '../view_models/login_viewModel.dart';
@@ -47,7 +49,8 @@ class LoginForm extends StatelessWidget {
                 return loginState is GenericLoadingState
                     ? const Loading()
                     : LoginButton(onPressed: () async {
-                        await loginViewModel.login();
+                        /* await loginViewModel.login();*/
+                        UI.push(AppRoutes.homeScreen);
                       });
               },
             ),

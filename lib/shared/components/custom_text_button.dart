@@ -4,15 +4,15 @@ import 'package:sizer/sizer.dart';
 import '../constants/styles.dart';
 
 class CustomTextButton extends StatelessWidget {
-  Color ?buttonColor;
-  Color  ?textColor;
-  double ?textSize;
-  void Function() ? onPressed;
-  String ?text;
+  Color? buttonColor;
+  Color? textColor;
+  double? textSize;
+  void Function()? onPressed;
+  String? text;
   double? roundedBorder;
   Color? borderColor;
-  double ?buttonHorizontalPaddingval;
-  double ?buttonVerticalPaddingVal;
+  double? buttonHorizontalPaddingval;
+  double? buttonVerticalPaddingVal;
   double? hPadding;
   double? vPadding;
 
@@ -24,9 +24,10 @@ class CustomTextButton extends StatelessWidget {
       this.vPadding = 15,
       this.buttonHorizontalPaddingval = 0,
       this.buttonVerticalPaddingVal = 0,
-        this.textColor,
+      this.textColor,
       this.textSize,
-        this.onPressed, this.text});
+      this.onPressed,
+      this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,9 @@ class CustomTextButton extends StatelessWidget {
         child: MaterialButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(roundedBorder!),
-            side: BorderSide(color: borderColor??buttonColor ?? Colors.transparent, width: 1),
+            side: BorderSide(
+                color: borderColor ?? buttonColor ?? Colors.transparent,
+                width: 1),
           ),
           elevation: 0,
           padding:
@@ -50,7 +53,9 @@ class CustomTextButton extends StatelessWidget {
             child: Text(
               text!,
               textAlign: TextAlign.center,
-              style: AppStyles.kTextStyle13.copyWith(fontSize: textSize??11.sp ,color: textColor??Colors.white),
+              style: AppStyles.kTextStyle18.copyWith(fontWeight: FontWeight.bold).copyWith(
+                  fontSize: textSize ?? 11.sp,
+                  color: textColor ?? Colors.white),
             ),
           ),
           onPressed: onPressed,

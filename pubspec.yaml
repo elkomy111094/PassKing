@@ -73,6 +73,7 @@ dependencies:
   permission_handler: ^11.0.0
   my_fatoorah: ^3.3.0
   jwt_decoder: ^2.0.1
+  google_fonts:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -89,10 +90,31 @@ flutter:
     - assets/.env
 
   fonts:
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/Montserrat-Regular.ttf
-
     - family: Taga
       fonts:
-        - asset: assets/fonts/ArbFONTS-Tajawal-Regular.ttf
+        - asset: assets/fonts/Cairo-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo-Light.ttf
+          weight: 300
+    - family: montserrat
+      fonts:
+        - asset: assets/fonts/Cairo-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo-Light.ttf
+          weight: 300

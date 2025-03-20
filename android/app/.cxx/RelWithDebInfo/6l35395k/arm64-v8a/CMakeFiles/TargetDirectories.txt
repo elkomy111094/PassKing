@@ -1,0 +1,2 @@
+C:/Users/ThinkPad/StudioProjects/pass_king/android/app/.cxx/RelWithDebInfo/6l35395k/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/ThinkPad/StudioProjects/pass_king/android/app/.cxx/RelWithDebInfo/6l35395k/arm64-v8a/CMakeFiles/rebuild_cache.dir
