@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:logger/logger.dart';
 
 import '../models/user_model.dart';
@@ -11,13 +10,12 @@ class PrefManager {
   static bool? isDarkTheme;
   static UserModel? currentUser;
 
-
-
   static Future init() async {
     /// User
     String userData = await getCurrentUserFromSharedPref();
     if (userData.isNotEmpty) {
-      Map<String, dynamic> user = jsonDecode(await getCurrentUserFromSharedPref());
+      Map<String, dynamic> user =
+          jsonDecode(await getCurrentUserFromSharedPref());
       currentUser = UserModel.fromJson(user);
       Logger().d("user : ${currentUser!.toJson()}");
     }
@@ -28,20 +26,16 @@ class PrefManager {
   }
 
   /// SETTERS
-  static Future setCurrentUser(UserModel? user) async
-  {
+  static Future setCurrentUser(UserModel? user) async {
     currentUser = user;
-    if (user != null)
-    {
+    if (user != null) {
       String storedUser = jsonEncode(user.toJson());
-      await PrefUtils.setString(PrefKeys.currentUser, storedUser).then((value)
-      {
-        Logger().d("CurrentUser Saved SuccessFully") ;
-        setOnBoardingShowState(state: true ) ;
+      await PrefUtils.setString(PrefKeys.currentUser, storedUser).then((value) {
+        Logger().d("CurrentUser Saved SuccessFully");
+        setOnBoardingShowState(state: true);
       });
-      await setCurrentUserAccessTokenInSharedPrefs() ;
-    } else
-    {
+      await setCurrentUserAccessTokenInSharedPrefs();
+    } else {
       await PrefUtils.setString(PrefKeys.currentUser, "");
     }
   }
@@ -56,18 +50,16 @@ class PrefManager {
     return await PrefUtils.getString(PrefKeys.currentUser);
   }
 
-
   static Future setCurrentUserAccessTokenInSharedPrefs() async {
-
     if (currentUser != null) {
-      await PrefUtils.setString(PrefKeys.userToken, currentUser!.token.toString()).then((value)
-      {
-        Logger().d("AccessToken Saved SuccessFully") ;
+      await PrefUtils.setString(
+              PrefKeys.userToken, currentUser!.deviceToken.toString())
+          .then((value) {
+        Logger().d("AccessToken Saved SuccessFully");
       });
-
     } else {
       await PrefUtils.setString(PrefKeys.currentUser, "");
-      Logger().d("AccessToken Not Saved Saved , Can't Find User ") ;
+      Logger().d("AccessToken Not Saved Saved , Can't Find User ");
     }
   }
 
@@ -75,16 +67,13 @@ class PrefManager {
     return await PrefUtils.getString(PrefKeys.userToken);
   }
 
-
-  static Future setOnBoardingShowState({bool ? state}) async
-  {
-    await PrefUtils.setBool("onBoardingState", state ?? false );
+  static Future setOnBoardingShowState({bool? state}) async {
+    await PrefUtils.setBool("onBoardingState", state ?? false);
   }
 
-  static Future getOnBoardingShowState() async
-  {
-    bool? state= await PrefUtils.getBool("onBoardingState") ;
-    Logger().d(state) ;
+  static Future getOnBoardingShowState() async {
+    bool? state = await PrefUtils.getBool("onBoardingState");
+    Logger().d(state);
     return state;
   }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "843462803695",
+    "project_id": "king-e8575",
+    "storage_bucket": "king-e8575.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843462803695:android:5eab39a321a0829e425b1a",
+        "android_client_info": {
+          "package_name": "com.example.pass_king"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5QEQJGDkN9o8S5HDbC8huMp4tNTAo2lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

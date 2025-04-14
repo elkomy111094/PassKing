@@ -46,14 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
             type: MessageType.error,
           );
         } else if (state is GenericUpdatedState) {
-          PrefManager.setCurrentUser(state.data);
-          loginViewModel.getUserData();
-        } else if (state is GenericSucessRequestState) {
-          if (PrefManager.currentUser!.data.activePlan) {
-            UI.pushWithRemove(AppRoutes.storeBottomNavBar);
-          } else {
-            UI.push(AppRoutes.choosePalnScreen);
-          }
+          PrefManager.setCurrentUser(state.data).then((value) {
+            UI.pushWithRemove(AppRoutes.homeScreen);
+          });
         }
       },
       builder: (context, state) {

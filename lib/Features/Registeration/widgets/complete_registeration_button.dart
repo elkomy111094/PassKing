@@ -27,7 +27,7 @@ class CompleteRegisterationButton extends StatelessWidget {
         textSize: 16.sp,
         onPressed: () async {
           await registerationViewModel.completeRegisteration(
-            deviceToken: deviceToken,
+            deviceToken: deviceToken ?? "",
           );
         },
         text: "Register".tr);

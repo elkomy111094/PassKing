@@ -140,7 +140,8 @@ class _UserCompleteRegisterationScreenState
                             registerationViewModel: registerationViewModel),
                         LastNameFormField(
                             registerationViewModel: registerationViewModel),
-                        EmailFormField(controller: TextEditingController()),
+                        EmailFormField(
+                            controller: registerationViewModel.emailController),
                         PasswordFormField(
                             controller:
                                 registerationViewModel.passwordController),
@@ -153,7 +154,7 @@ class _UserCompleteRegisterationScreenState
                                 : CompleteRegisterationButton(
                                     registerationViewModel:
                                         registerationViewModel,
-                                    deviceToken: deviceToken,
+                                    deviceToken: deviceToken ?? "",
                                     widget: widget);
                           },
                         ),

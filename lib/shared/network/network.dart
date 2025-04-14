@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../main.dart';
-
 import '../models/failure.dart';
 import '../prefs/pref_manager.dart';
 import '../providers/language_provider.dart';
@@ -25,53 +23,50 @@ class Network {
     try {
       Response response = await _dio.post(
         baseUrl + endPoint,
-        data: data!=null ?FormData.fromMap(data!) : "",
+        data: data != null ? FormData.fromMap(data!) : "",
         options: token != null
             ? Options(
-          headers: {
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Devices-Token": devicesToken ?? "",
-            /* "Accept-Language": Provider.of<LanguageProvider>(
+                headers: {
+                  "Authorization": "Bearer " + token,
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "Devices-Token": devicesToken ?? "",
+                  /* "Accept-Language": Provider.of<LanguageProvider>(
                           navigatorKey.currentContext!,
                           listen: false)
                       .appLanguage,
                   "time-zone": await FlutterTimezone.getLocalTimezone()*/
-          },
-        )
-            : PrefManager.currentUser?.token != null
-            ? Options(
-          headers: {
-            "Authorization": "Bearer ${PrefManager.currentUser!.token}",
-            "Content-Type": 'application/json',
-            "Accept": 'application/json',
-            "Devices-Token": devicesToken ?? "",
-          },
-        )
-            : Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Devices-Token": devicesToken ?? "",
-          },
-        ),
+                },
+              )
+            : PrefManager.currentUser?.deviceToken != null
+                ? Options(
+                    headers: {
+                      "Authorization":
+                          "Bearer ${PrefManager.currentUser!.deviceToken}",
+                      "Content-Type": 'application/json',
+                      "Accept": 'application/json',
+                      "Devices-Token": devicesToken ?? "",
+                    },
+                  )
+                : Options(
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Accept": "application/json",
+                      "Devices-Token": devicesToken ?? "",
+                    },
+                  ),
       );
       Logger().d(response.data);
       return response;
-    } on DioException catch (error)
-    {
+    } on DioException catch (error) {
+      Logger().e(error.message);
 
-      Logger().e(error.message) ;
-
-      if (error.response?.data != null)
-      {
+      if (error.response?.data != null) {
         List<dynamic> resposeErrors = error.response?.data['errors'] ?? [];
-        String message = error.response?.data['message'] ;
+        String message = error.response?.data['message'];
         throw Failure(
-            message: resposeErrors.isNotEmpty
-                ? resposeErrors[0]["value"]
-                : message,
+            message:
+                resposeErrors.isNotEmpty ? resposeErrors[0]["value"] : message,
             data: error.response?.data["errors"]);
       } else if (error.type == DioExceptionType.connectionError ||
           error.type == DioExceptionType.unknown)
@@ -110,19 +105,20 @@ class Network {
       return await _dio.post(
         baseUrl + endPoint,
         data: jsonEncode(data),
-        options: PrefManager.currentUser!.token != null
+        options: PrefManager.currentUser!.deviceToken != null
             ? Options(
-          headers: {
-            "Authorization": "Bearer ${PrefManager.currentUser!.token}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Accept-Language": Provider.of<LanguageProvider>(
-                navigatorKey.currentContext!,
-                listen: false)
-                .appLanguage,
-            /* "time-zone": await FlutterTimezone.getLocalTimezone()*/
-          },
-        )
+                headers: {
+                  "Authorization":
+                      "Bearer ${PrefManager.currentUser!.deviceToken}",
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "Accept-Language": Provider.of<LanguageProvider>(
+                          navigatorKey.currentContext!,
+                          listen: false)
+                      .appLanguage,
+                  /* "time-zone": await FlutterTimezone.getLocalTimezone()*/
+                },
+              )
             : null,
       );
     } on DioError catch (error) {
@@ -163,19 +159,20 @@ class Network {
     try {
       return await _dio.delete(
         baseUrl + endPoint,
-        options: PrefManager.currentUser!.token != null
+        options: PrefManager.currentUser!.deviceToken != null
             ? Options(
-          headers: {
-            "Authorization": "Bearer ${PrefManager.currentUser!.token}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Accept-Language": Provider.of<LanguageProvider>(
-                navigatorKey.currentContext!,
-                listen: false)
-                .appLanguage,
-            /* "time-zone": await FlutterTimezone.getLocalTimezone()*/
-          },
-        )
+                headers: {
+                  "Authorization":
+                      "Bearer ${PrefManager.currentUser!.deviceToken}",
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "Accept-Language": Provider.of<LanguageProvider>(
+                          navigatorKey.currentContext!,
+                          listen: false)
+                      .appLanguage,
+                  /* "time-zone": await FlutterTimezone.getLocalTimezone()*/
+                },
+              )
             : null,
       );
     } on DioError catch (error) {
@@ -217,19 +214,20 @@ class Network {
       return await _dio.put(
         baseUrl + endPoint,
         data: jsonEncode(data),
-        options: PrefManager.currentUser!.token != null
+        options: PrefManager.currentUser!.deviceToken != null
             ? Options(
-          headers: {
-            "Authorization": "Bearer ${PrefManager.currentUser!.token}",
-            "Content-Type": "multipart/form-data",
-            "Accept": "application/json",
-            "Accept-Language": Provider.of<LanguageProvider>(
-                navigatorKey.currentContext!,
-                listen: false)
-                .appLanguage,
-            /*"time-zone": await FlutterTimezone.getLocalTimezone()*/
-          },
-        )
+                headers: {
+                  "Authorization":
+                      "Bearer ${PrefManager.currentUser!.deviceToken}",
+                  "Content-Type": "multipart/form-data",
+                  "Accept": "application/json",
+                  "Accept-Language": Provider.of<LanguageProvider>(
+                          navigatorKey.currentContext!,
+                          listen: false)
+                      .appLanguage,
+                  /*"time-zone": await FlutterTimezone.getLocalTimezone()*/
+                },
+              )
             : null,
       );
     } on DioError catch (error) {
@@ -264,47 +262,46 @@ class Network {
   }
 
   /// GET Method
-  static Future<Response<dynamic>> get(endPoint,{ String? token, String? devicesToken}) async {
+  static Future<Response<dynamic>> get(endPoint,
+      {String? token, String? devicesToken}) async {
     Logger().d(baseUrl + endPoint);
     try {
-      Response response = await _dio.get(
-          baseUrl + endPoint,
+      Response response = await _dio.get(baseUrl + endPoint,
           options: token != null
               ? Options(
-            headers: {
-              "Authorization": "Bearer " + token,
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-              "Devices-Token": devicesToken ?? "",
-              /* "Accept-Language": Provider.of<LanguageProvider>(
+                  headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Devices-Token": devicesToken ?? "",
+                    /* "Accept-Language": Provider.of<LanguageProvider>(
                           navigatorKey.currentContext!,
                           listen: false)
                       .appLanguage,
                   "time-zone": await FlutterTimezone.getLocalTimezone()*/
-            },
-          )
-              : PrefManager.currentUser?.token != null
-              ? Options(
-
-            headers: {
-              "Authorization":
-              "Bearer ${PrefManager.currentUser!.token}",
-              "Content-Type": 'application/json',
-              "Accept": 'application/json',
-              "Devices-Token": devicesToken ?? "",
-            },
-          )
-              : Options(
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-              "Devices-Token": devicesToken ?? "",
-            },
-            /*options: PrefManager.currentUser?.token != null
+                  },
+                )
+              : PrefManager.currentUser?.deviceToken != null
+                  ? Options(
+                      headers: {
+                        "Authorization":
+                            "Bearer ${PrefManager.currentUser!.deviceToken}",
+                        "Content-Type": 'application/json',
+                        "Accept": 'application/json',
+                        "Devices-Token": devicesToken ?? "",
+                      },
+                    )
+                  : Options(
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Devices-Token": devicesToken ?? "",
+                      },
+                      /*options: PrefManager.currentUser?.deviceToken != null
             ? Options(
                 headers: {
                   "Authorization":
-                      "Bearer ${PrefManager.currentUser!.token}",
+                      "Bearer ${PrefManager.currentUser!.deviceToken}",
                   "Accept": "application/json",
                   "Accept-Language": Provider.of<LanguageProvider>(
                           navigatorKey.currentContext!,
@@ -324,23 +321,20 @@ class Network {
                   "Accept-PageSize": 1000,
                 },
               ),*/
-          ));
+                    ));
 
       Logger().d(response.data);
 
       return response;
-    } on DioError catch (error)  {
+    } on DioError catch (error) {
+      Logger().e(error.message);
 
-      Logger().e(error.message) ;
-
-      if (error.response?.data != null)
-      {
+      if (error.response?.data != null) {
         List<dynamic> resposeErrors = error.response?.data['errors'] ?? [];
-        String message = error.response?.data['message'] ;
+        String message = error.response?.data['message'];
         throw Failure(
-            message: resposeErrors.isNotEmpty
-                ? resposeErrors[0]["value"]
-                : message,
+            message:
+                resposeErrors.isNotEmpty ? resposeErrors[0]["value"] : message,
             data: error.response?.data["errors"]);
       } else if (error.type == DioExceptionType.connectionError ||
           error.type == DioExceptionType.unknown)
@@ -377,18 +371,13 @@ class Network {
       Logger().d(error.response?.data);
       if (error.response!.statusCode == 500) {
         throw Failure(message: "Server error");
-      } else if (error.response!.statusCode == 401)
-      {
+      } else if (error.response!.statusCode == 401) {
         throw Failure(message: "Unauthorized");
-      } else if (error.response!.statusCode == 404)
-      {
+      } else if (error.response!.statusCode == 404) {
         throw Failure(message: "Not Found");
-      }
-      else if(error.response!.statusCode == 400 )
-      {
+      } else if (error.response!.statusCode == 400) {
         throw Failure(message: error.response?.data["message"]);
-      }
-      else {
+      } else {
         throw Failure(message: error.response!.statusMessage);
       }
     } on SocketException {
