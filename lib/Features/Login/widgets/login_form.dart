@@ -8,7 +8,6 @@ import '../../../shared/generic_cubit/generic_cubit.dart';
 import '../../../shared/widgets/loading_widget.dart';
 import '../../../shared/widgets/password_form_field.dart';
 import '../view_models/login_viewModel.dart';
-import 'forgrt_password_button.dart';
 import 'login_button.dart';
 
 class LoginForm extends StatelessWidget {
@@ -38,7 +37,7 @@ class LoginForm extends StatelessWidget {
             PasswordFormField(controller: loginViewModel.passwordController),
 
             /// Forget Password Button
-            ForgrtPasswordButton(),
+            /*   ForgrtPasswordButton(),  */
 
             /// Enter Button
             BlocBuilder<GenericCubit, GenericCubitState>(

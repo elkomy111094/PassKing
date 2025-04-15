@@ -134,19 +134,23 @@ class AppRoutes {
         return appPage(ChangePasswordPage());
 
       case passwordDetailsPage:
-        return appPage(const PasswordDetailsPage());
+        return appPage(PasswordDetailsPage(
+          account: args,
+        ));
 
       case passwordRevealedPage:
         return appPage(const PasswordRevealedPage());
 
       case addPasswordPage:
-        return appPage(const AddNewPasswordPage());
+        return appPage(AddNewPasswordPage());
 
       case generatePasswordPage:
         return appPage(const GeneratePasswordPage());
 
       case editPasswordPage:
-        return appPage(const EditPasswordPage());
+        return appPage(EditPasswordPage(
+          account: args,
+        ));
 
       default:
         return appPage(SplashScreen());

@@ -7,6 +7,7 @@ class UserModel {
   final String lastName;
   final String deviceToken;
   final String createdAt; // Firebase timestamp for when the user was created
+  final String image;
 
   UserModel({
     required this.uid,
@@ -15,12 +16,14 @@ class UserModel {
     required this.lastName,
     required this.deviceToken,
     required this.createdAt,
+    required this.image,
   });
 
   // Factory constructor to create a UserModel from Firestore document data
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       uid: json['uid'] ?? '',
+      image: json['image'] ?? '',
       email: json['email'] ?? '',
       firstName: json['first_name'] ?? '',
       lastName: json['last_name'] ?? '',
@@ -38,6 +41,7 @@ class UserModel {
       'last_name': lastName,
       'device_token': deviceToken,
       'createdAt': createdAt,
+      "image": image
     };
   }
 }

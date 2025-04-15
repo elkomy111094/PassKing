@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pass_king/shared/constants/colors.dart';
 import 'package:pass_king/shared/constants/styles.dart';
 import 'package:pass_king/shared/extensions/padding_extentions.dart';
+import 'package:pass_king/shared/generic_cubit/generic_cubit.dart';
+import 'package:pass_king/shared/prefs/pref_manager.dart';
 import 'package:pass_king/shared/util/app_routes.dart';
 import 'package:pass_king/shared/util/ui.dart';
+import 'package:pass_king/shared/widgets/loading_widget.dart';
+import 'package:pass_king/shared/widgets/no_data_widget.dart';
 import 'package:sizer/sizer.dart';
 
-class HomeScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> savedPasswords = [
-    {'name': 'Facebook', 'icon': Icons.facebook, 'password': 'Fb@1234'},
-    {'name': 'Amazon', 'icon': Icons.shopping_cart, 'password': 'Amz@5678'},
-    {'name': 'Apple', 'icon': Icons.apple, 'password': 'App@9999'},
-    {'name': 'Netflix', 'icon': Icons.tv, 'password': 'Nflx@4444'},
-    {'name': 'Facebook', 'icon': Icons.facebook, 'password': 'Fb@1234'},
-    {'name': 'Amazon', 'icon': Icons.shopping_cart, 'password': 'Amz@5678'},
-    {'name': 'Apple', 'icon': Icons.apple, 'password': 'App@9999'},
-    {'name': 'Netflix', 'icon': Icons.tv, 'password': 'Nflx@4444'},
-  ];
+import 'home_view_model.dart';
 
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  HomeViewModel viewModel = HomeViewModel();
+  @override
+  void initState() {
+    viewModel.getAllPasswords();
+  }
 
   void copyPassword(String password) {
     Fluttertoast.showToast(
@@ -31,116 +38,179 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          CustomHeader(
-            userName: 'Mohamed',
-            profileImageUrl: 'https://i.pravatar.cc/150?img=3',
-            notificationCount: 5,
-            onProfileTap: () => UI.push(AppRoutes.profilePage),
-            onNotificationTap: () => UI.push(AppRoutes.notificationScreen),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  3.ph,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocConsumer<GenericCubit, GenericCubitState>(
+      bloc: viewModel.homeCubit,
+      listener: (context, state) {
+        if (state is GenericErrorState) {
+          UI.showAlert(
+            context,
+            message: state.responseError?.message ?? "",
+            type: MessageType.error,
+          );
+        } else if (state is GenericUpdatedState) {}
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: [
+              CustomHeader(
+                userName: PrefManager.currentUser?.firstName ?? "",
+                profileImageUrl: 'https://i.pravatar.cc/150?img=3',
+                notificationCount: 5,
+                onProfileTap: () => UI.push(AppRoutes.profilePage),
+                onNotificationTap: () => UI.push(AppRoutes.notificationScreen),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InfoCard(
-                        number: 120,
-                        label: 'Passwords \n Stored',
-                        onTap: () {
-                          // Handle tap here
+                      3.ph,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InfoCard(
+                            number: viewModel.accountsList == null
+                                ? 0
+                                : viewModel.accountsList!.length,
+                            label: 'Passwords \n Stored',
+                            onTap: () {
+                              // Handle tap here
+                            },
+                          ),
+                          InfoCard(
+                            number: 5,
+                            label: 'Passwords Compromised',
+                            onTap: () {
+                              // Handle tap here
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: viewModel.searchController,
+                        onChanged: (value) {
+                          // استدعاء دالة البحث عند تغيير النص
+                          viewModel.searchPasswords(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search Websites...",
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        validator: (value) {
+                          // تحقق اختياري لو حبيت تضيفه
+                          return null;
                         },
                       ),
-                      InfoCard(
-                        number: 5,
-                        label: 'Passwords Compromised',
-                        onTap: () {
-                          // Handle tap here
-                        },
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: state is GenericLoadingState
+                            ? Loading()
+                            : state is GenericErrorState
+                                ? Center(
+                                    child: Text(
+                                        state.responseError?.message ?? ""))
+                                : viewModel.accountsList == null ||
+                                        viewModel.accountsList!.isEmpty
+                                    ? NoDataWidget(title: "No Passwords Found")
+                                    : ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount:
+                                            viewModel.accountsList!.length,
+                                        itemBuilder: (context, index) {
+                                          final item =
+                                              viewModel.accountsList![index];
+                                          return Container(
+                                            height: 11.h,
+                                            child: Card(
+                                              color: Colors.white,
+                                              elevation: 0,
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          1.h),
+                                                  side: BorderSide(
+                                                      color: AppColors
+                                                          .kGreyColor
+                                                          .withOpacity(.5))),
+                                              child: Center(
+                                                child: ListTile(
+                                                  onTap: () {
+                                                    UI.push(
+                                                        AppRoutes
+                                                            .passwordDetailsPage,
+                                                        arguments: item);
+                                                  },
+                                                  leading: CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.grey[800],
+                                                    child: Text(
+                                                      item.name
+                                                              .trim()
+                                                              .isNotEmpty
+                                                          ? item.name.trim()[0]
+                                                          : '',
+                                                      style: AppStyles
+                                                          .kTextStyle18
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                    ),
+                                                  ),
+                                                  title: Text(
+                                                    item.name,
+                                                    style: AppStyles
+                                                        .kTextStyle18
+                                                        .copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                  ),
+                                                  trailing: IconButton(
+                                                    icon: const Icon(Icons.copy,
+                                                        color: Colors.red),
+                                                    onPressed: () =>
+                                                        copyPassword(
+                                                            item.password),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search Websites...",
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: savedPasswords.length,
-                      itemBuilder: (context, index) {
-                        final item = savedPasswords[index];
-                        return Container(
-                          height: 11.h,
-                          child: Card(
-                            color: Colors.white,
-                            elevation: 0,
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(1.h),
-                                side: BorderSide(
-                                    color:
-                                        AppColors.kGreyColor.withOpacity(.5))),
-                            child: Center(
-                              child: ListTile(
-                                onTap: () {
-                                  UI.push(AppRoutes.passwordDetailsPage);
-                                },
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.grey[800],
-                                  child:
-                                      Icon(item['icon'], color: Colors.white),
-                                ),
-                                title: Text(
-                                  item['name'],
-                                  style: AppStyles.kTextStyle18
-                                      .copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                trailing: IconButton(
-                                  icon:
-                                      const Icon(Icons.copy, color: Colors.red),
-                                  onPressed: () =>
-                                      copyPassword(item['password']),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.kPrimaryColor,
-        shape: const CircleBorder(),
-        onPressed: () {
-          UI.push(AppRoutes.addPasswordPage);
-        },
-        child: const Icon(Icons.add, size: 30, color: Colors.white),
-      ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.kPrimaryColor,
+            shape: const CircleBorder(),
+            onPressed: () {
+              UI.push(AppRoutes.addPasswordPage);
+            },
+            child: const Icon(Icons.add, size: 30, color: Colors.white),
+          ),
+        );
+      },
     );
   }
 }

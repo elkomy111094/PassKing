@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_king/shared/prefs/pref_manager.dart';
 import 'package:pass_king/shared/util/app_routes.dart';
 import 'package:pass_king/shared/util/ui.dart';
 import 'package:sizer/sizer.dart';
@@ -64,7 +65,9 @@ class ProfilePage extends StatelessWidget {
 
               // Name & Email
               Text(
-                "JAMES SMITH",
+                PrefManager.currentUser!.firstName +
+                    " " +
+                    PrefManager.currentUser!.lastName,
                 style: AppStyles.kTextStyle14.copyWith(
                   color: Colors.black,
                   fontSize: 18.sp,
@@ -73,7 +76,7 @@ class ProfilePage extends StatelessWidget {
               ),
               SizedBox(height: 1.h),
               Text(
-                "james.smith@mail.gg",
+                PrefManager.currentUser!.email,
                 style: AppStyles.kTextStyle11.copyWith(
                   fontSize: 14.sp,
                   color: Colors.grey[700],
@@ -95,7 +98,7 @@ class ProfilePage extends StatelessWidget {
                 title: "Change Master Password",
                 onTap: () => UI.push(AppRoutes.changePasswordPage),
               ),
-              buildActionButton(
+/*              buildActionButton(
                 context,
                 icon: Icons.edit_note_rounded,
                 title: "Autofill Settings",
@@ -106,7 +109,7 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.nightlight_round,
                 title: "Switch to Dark Mode",
                 onTap: () {},
-              ),
+              ),*/
 
               SizedBox(height: 2.h),
 
@@ -115,7 +118,9 @@ class ProfilePage extends StatelessWidget {
                 width: double.infinity,
                 height: 7.h,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    UI.pushWithRemove(AppRoutes.login);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
@@ -138,13 +143,13 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 2.h),
 
               // Version Text
-              Text(
+              /*     Text(
                 "v 0.1.2",
                 style: AppStyles.kTextStyle18.copyWith(
                   color: Colors.grey[600],
                   fontSize: 14.sp,
                 ),
-              ),
+              ),*/
               SizedBox(height: 2.h),
             ],
           ),

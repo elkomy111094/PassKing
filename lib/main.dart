@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,6 +23,22 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await PrefManager.init();
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    await FirebaseFirestore.instance.collection('notifications').add({
+      'userId': FirebaseAuth.instance.currentUser?.uid ?? "",
+      'title': message.notification?.title,
+      'body': message.notification?.body,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    print(
+        "📥 Notification Received in foreground: ${message.notification?.title}");
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("📲 Opened from notification: ${message.notification?.title}");
+  });
+
 /*
   //Assign publishable key to flutter_stripe
   Stripe.publishableKey =
